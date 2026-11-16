@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Launch Radar</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap head-in">
+    <div class="brand">
+      <div class="rings" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div>
+        <h1>Token Launch Radar</h1>
+        <p class="sub">Protocols that record no token yet, ranked by what a launch would be worth.
+          Snapshot of <span id="asof">…</span>, sealed: the page runs on the data file beside it, no network.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="st-total">–</b><span>protocols scanned</span></div>
+      <div class="stat"><b id="st-pre">–</b><span>record no token</span></div>
+      <div class="stat"><b id="st-watch">–</b><span>on the watchlist</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="board-view">
+    <div class="panel model" id="model-panel"></div>
+
+    <div class="controls">
+      <label class="ctl grow">Search
+        <input id="f-q" type="search" placeholder="Protocol name or slug">
+      </label>
+      <label class="ctl">Category
+        <select id="f-cat"></select>
+      </label>
+      <label class="ctl">Chain
+        <select id="f-chain"></select>
+      </label>
+      <label class="ctl">Min TVL
+        <select id="f-min">
+          <option value="0">Any size</option>
+          <option value="25000000">$25M+</option>
+          <option value="50000000">$50M+</option>
+          <option value="100000000">$100M+</option>
+          <option value="500000000">$500M+</option>
+          <option value="1000000000">$1B+</option>
+        </select>
+      </label>
+      <label class="ctl">Sort by
+        <select id="f-sort">
+          <option value="implied">Implied value</option>
+          <option value="tvl">TVL</option>
+          <option value="change">7d change</option>
+          <option value="tokenless">Longest tokenless</option>
+        </select>
+      </label>
+      <label class="ctl check">
+        <input id="f-watch" type="checkbox"> Watchlist only
+      </label>
+    </div>
+
+    <div class="tablewrap">
+      <table id="board-table">
+        <thead><tr>
+          <th class="num">#</th><th>Protocol</th><th>Category</th><th>Chains</th>
+          <th class="num">TVL</th><th class="num">7d</th><th>Tokenless since</th>
+          <th class="num">Implied value</th><th class="num">Implied / TVL</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="count" id="rowcount"></p>
+  </section>
+
+  <section id="detail-view" hidden></section>
+</main>
+
+<footer class="wrap foot">
+  Implied value is this radar's own estimate from the snapshot's figures, not a prediction that a token
+  will be issued or what it would trade at. Farm plans are starting points for a reader's own research;
+  nothing here promises an airdrop or a return.
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
