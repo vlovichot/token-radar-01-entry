@@ -39,6 +39,28 @@ if (issue !== null) {
 
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, 'board.json'), `${JSON.stringify({ rows: board })}\n`);
+
+// Self-check the board as written, not the board in memory: the hand-in is the file on disk.
+const written = JSON.parse(readFileSync(join(out, 'board.json'), 'utf8')) as { rows: typeof board };
+const onDisk = new Set(written.rows.map((row) => row.slug));
+for (const slug of snapshot.watchlist) {
+  if (!onDisk.has(slug)) {
+    process.stderr.write(`radar: self-check failed: watchlist slug ${slug} is missing from board.json\n`);
+    process.exit(1);
+  }
+}
+const byRank = [...written.rows].sort((a, b) => a.rank - b.rank);
+if (byRank.some((row, at) => row.rank !== at + 1)) {
+  process.stderr.write(`radar: self-check failed: board.json ranks are not exactly 1..${byRank.length}\n`);
+  process.exit(1);
+}
+for (let at = 1; at < byRank.length; at++) {
+  if (byRank[at]!.implied_value_usd > byRank[at - 1]!.implied_value_usd) {
+    process.stderr.write(`radar: self-check failed: board.json implied value rises at rank ${byRank[at]!.rank}\n`);
+    process.exit(1);
+  }
+}
+
 writeFileSync(join(out, 'data.js'), dataScript(radar));
 
 /** Copy a directory tree of regular files, skipping dot-names at every level. */
